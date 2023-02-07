@@ -581,7 +581,7 @@ class NearNeighbors:
         gives original site index from ProvidedPeriodicSite."""
         if isinstance(structure, (IStructure, Structure)):
             for i, s in enumerate(structure):
-                if site.is_periodic_image(s):
+                if site.is_periodic_image(s, check_lattice=False, check_species=False):
                     return i
         else:
             for i, s in enumerate(structure):
