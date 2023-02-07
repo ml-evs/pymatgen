@@ -511,7 +511,7 @@ class PeriodicSite(Site, MSONable):
             return False
 
         frac_diff = pbc_diff(self.frac_coords, other.frac_coords, self.lattice.pbc)
-        return np.allclose(frac_diff, [0, 0, 0], atol=tolerance)
+        return np.linalg.norm(frac_diff) < tolerance
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Site):
