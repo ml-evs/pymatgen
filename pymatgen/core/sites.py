@@ -487,7 +487,9 @@ class PeriodicSite(Site, MSONable):
             return None
         return PeriodicSite(self.species, frac_coords, self.lattice, properties=self.properties)
 
-    def is_periodic_image(self, other: PeriodicSite, tolerance: float = 1e-8, check_lattice: bool = True) -> bool:
+    def is_periodic_image(
+        self, other: PeriodicSite, tolerance: float = 1e-8, check_lattice: bool = True, check_species: bool = True
+    ) -> bool:
         """
         Returns True if sites are periodic images of each other.
 
@@ -496,17 +498,20 @@ class PeriodicSite(Site, MSONable):
             tolerance (float): Tolerance to compare fractional coordinates
             check_lattice (bool): Whether to check if the two sites have the
                 same lattice.
+            check_species (bool): Whether to check if the two sites have the
+                same species.
+
 
         Returns:
             bool: True if sites are periodic images of each other.
         """
         if check_lattice and self.lattice != other.lattice:
             return False
-        if self.species != other.species:
+        if check_species and self.species != other.species:
             return False
 
         frac_diff = pbc_diff(self.frac_coords, other.frac_coords, self.lattice.pbc)
-        return np.allclose(frac_diff, [0, 0, 0], atol=tolerance)
+        return np.linalg.norm(frac_diff) < tolerance
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Site):

@@ -186,8 +186,7 @@ def pbc_diff(fcoords1: ArrayLike, fcoords2: ArrayLike, pbc: tuple[bool, bool, bo
         pbc_diff([0.1, 0.1, 0.1], [0.3, 0.5, 0.9]) = [-0.2, -0.4, 0.2]
         pbc_diff([0.9, 0.1, 1.01], [0.3, 0.5, 0.9]) = [-0.4, -0.4, 0.11]
     """
-    fdist = np.subtract(fcoords1, fcoords2)
-    return fdist - np.round(fdist) * pbc
+    return np.mod(np.subtract(fcoords1, fcoords2), 1) * pbc
 
 
 def pbc_shortest_vectors(lattice, fcoords1, fcoords2, mask=None, return_d2=False):
